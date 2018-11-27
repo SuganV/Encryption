@@ -1,0 +1,332 @@
+package com.zoho.optimus.utils;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.adventnet.ds.query.*;
+import com.adventnet.optimus.PROPERTY;
+import com.adventnet.persistence.DataObject;
+import com.adventnet.persistence.Row;
+import com.adventnet.totido.APPCONFIG;
+
+import com.zoho.optimus.common.Constants;
+import com.zoho.optimus.common.DetectiveKey;
+import com.zoho.optimus.persistence.OptimusPersistence;
+import com.zoho.optimus.resources.User;
+
+import com.adventnet.ds.query.Join;
+import org.apache.pdfbox.tools.Encrypt;
+import sun.jvm.hotspot.debugger.posix.elf.ELFSectionHeader;
+
+import java.util.ArrayList;
+
+public class AppConfig {
+
+
+    private static final Logger LOGGER = Logger.getLogger(User.class.getName());
+
+    private static final Map<String, AppConfig> APP_CONFIG_BY_NAME = new HashMap();
+    private static final Map<Integer, AppConfig> APP_CONFIG_BY_ID = new HashMap();
+
+
+    private Map<String, Object> appProperties = new HashMap();
+    private Integer appID;
+    private String serverName;
+    private String uriRegex;
+    private Integer serverID;
+    private Integer ruleConfig;
+
+
+    public Integer getAppID() {
+        return appID;
+    }
+
+    public void setAppID(Integer appID) {
+        this.appID = appID;
+    }
+
+    public String getServerName() {
+        return serverName;
+    }
+
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
+    }
+
+    public String getUriRegex() {
+        return uriRegex;
+    }
+
+    public void setUriRegex(String uriRegex) {
+        this.uriRegex = uriRegex;
+    }
+
+    public Integer getServerID() {
+        return serverID;
+    }
+
+    public void setServerID(Integer serverID) {
+        this.serverID = serverID;
+    }
+
+    public Integer getRuleConfig() {
+        return ruleConfig;
+    }
+
+    public void setRuleConfig(Integer ruleConfig) {
+        this.ruleConfig = ruleConfig;
+    }
+
+
+    public Map<String, Object> getAppProperties() {
+        return appProperties;
+    }
+
+    public void setAppProperties(Map<String, Object> appProperties) {
+        this.appProperties = appProperties;
+    }
+
+
+    public static void migrate() {
+
+        ArrayList<DProperty> arrayList = new ArrayList();
+        String appName;
+
+        appName = "invoice";
+        arrayList.add(new DProperty(DetectiveKey.APP_NAME, "invoice", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.FORMATTED_NAME, "Invoice", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.DEFAULT_END_POINT, "https://invoice.localzoho.com", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.AUTH_TOKEN, "c130250a53bb8ab9ee83a7520b33820b", DProperty.ENCRYPTEDSTRING));
+        //arrayList.add(new DProperty(DetectiveKey.AUTH_TOKEN, Encryption.getEncryptValue("c130250a53bb8ab9ee83a7520b33820b",Encryption.ENCRYPTIONKEY), DProperty.ENCRYPTEDSTRING));
+        arrayList.add(new DProperty(DetectiveKey.ZIP_NAME, "ZohoBooksInvoice.zip", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.SD_NAME, "BOOKSINVOICE", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.APP_NAME_IN_URL, "invoice", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.LOG_HANDLING, "true", DProperty.BOOLEAN));
+
+        addOrUpdateDetectiveApp(appName, arrayList);
+
+
+        appName = "books";
+        arrayList.add(new DProperty(DetectiveKey.APP_NAME, "books", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.FORMATTED_NAME, "Books", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.DEFAULT_END_POINT, "https://books.localzoho.com", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.AUTH_TOKEN, "32da08bd7d77d57e796638c65fb0996a", DProperty. ENCRYPTEDSTRING));
+        //arrayList.add(new DProperty(DetectiveKey.AUTH_TOKEN, Encryption.getEncryptValue("32da08bd7d77d57e796638c65fb0996a",Encryption.ENCRYPTIONKEY), DProperty.ENCRYPTEDSTRING));
+        arrayList.add(new DProperty(DetectiveKey.ZIP_NAME, "ZohoBooks.zip", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.SD_NAME, "ZOHOBOOKS", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.APP_NAME_IN_URL, "books", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.LOG_HANDLING, "true", DProperty.BOOLEAN));
+
+        addOrUpdateDetectiveApp(appName, arrayList);
+
+
+        appName = "subscriptions";
+        arrayList.add(new DProperty(DetectiveKey.APP_NAME, "subscriptions", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.FORMATTED_NAME, "Subscriptions", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.DEFAULT_END_POINT, "https://subscriptions.localzoho.com", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.AUTH_TOKEN, "932ccbcd98f61de5917459267836a3d5", DProperty.ENCRYPTEDSTRING));
+        //arrayList.add(new DProperty(DetectiveKey.AUTH_TOKEN, Encryption.getEncryptValue("932ccbcd98f61de5917459267836a3d5",Encryption.ENCRYPTIONKEY), DProperty.ENCRYPTEDSTRING));
+        arrayList.add(new DProperty(DetectiveKey.ZIP_NAME, "ZohoSubscriptions.zip", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.SD_NAME, "ZSM_BOOKS", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.APP_NAME_IN_URL, "subscriptions", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.LOG_HANDLING, "true", DProperty.BOOLEAN));
+
+        addOrUpdateDetectiveApp(appName, arrayList);
+
+
+        appName = "expense";
+        arrayList.add(new DProperty(DetectiveKey.APP_NAME, "expense", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.FORMATTED_NAME, "Expense", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.DEFAULT_END_POINT, "https://expense.localzoho.com", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.AUTH_TOKEN, "29b131fef56bb30f6b4b8f67e81ea020", DProperty.ENCRYPTEDSTRING));
+        //arrayList.add(new DProperty(DetectiveKey.AUTH_TOKEN, Encryption.getEncryptValue("29b131fef56bb30f6b4b8f67e81ea020",Encryption.ENCRYPTIONKEY), DProperty.ENCRYPTEDSTRING));
+        arrayList.add(new DProperty(DetectiveKey.ZIP_NAME, "ZohoExpense.zip", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.SD_NAME, "EXPENSE_BOOKS", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.APP_NAME_IN_URL, "expense", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.LOG_HANDLING, "true", DProperty.BOOLEAN));
+
+
+        addOrUpdateDetectiveApp(appName, arrayList);
+
+
+        appName = "inventory";
+        arrayList.add(new DProperty(DetectiveKey.APP_NAME, "inventory", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.FORMATTED_NAME, "Inventory", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.DEFAULT_END_POINT, "https://inventory.localzoho.com", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.AUTH_TOKEN, "ddaa8a52138b1ad7b156891142762ce9", DProperty.ENCRYPTEDSTRING));
+        //arrayList.add(new DProperty(DetectiveKey.AUTH_TOKEN, Encryption.getEncryptValue("ddaa8a52138b1ad7b156891142762ce9",Encryption.ENCRYPTIONKEY), DProperty.ENCRYPTEDSTRING));
+        arrayList.add(new DProperty(DetectiveKey.ZIP_NAME, "ZohoInventory.zip", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.SD_NAME, "INVENTORY_BOOKS", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.APP_NAME_IN_URL, "inventory", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.LOG_HANDLING, "true", DProperty.BOOLEAN));
+
+        addOrUpdateDetectiveApp(appName, arrayList);
+
+
+        appName = "payroll";
+        arrayList.add(new DProperty(DetectiveKey.APP_NAME, "payroll", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.FORMATTED_NAME, "Payroll", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.DEFAULT_END_POINT, "https://payroll.localzoho.com", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.AUTH_TOKEN, "f11ee413d29c445e5f34a8b16a691abf", DProperty.ENCRYPTEDSTRING));
+        //arrayList.add(new DProperty(DetectiveKey.AUTH_TOKEN, Encryption.getEncryptValue("f11ee413d29c445e5f34a8b16a691abf",Encryption.ENCRYPTIONKEY), DProperty.ENCRYPTEDSTRING));
+        arrayList.add(new DProperty(DetectiveKey.ZIP_NAME, "ZohoPayroll.zip", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.SD_NAME, "PAYROLL_BOOKS", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.APP_NAME_IN_URL, "payroll", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.LOG_HANDLING, "true", DProperty.BOOLEAN));
+
+        addOrUpdateDetectiveApp(appName, arrayList);
+
+
+        appName = "store";
+        arrayList.add(new DProperty(DetectiveKey.APP_NAME, "store", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.FORMATTED_NAME, "Store", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.DEFAULT_END_POINT, "https://store.localzoho.com", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.AUTH_TOKEN, "", DProperty.ENCRYPTEDSTRING));
+        arrayList.add(new DProperty(DetectiveKey.ZIP_NAME, "ZohoStoreAPI.zip", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.SD_NAME, "BOOKS_ZOS", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.APP_NAME_IN_URL, "store", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.LOG_HANDLING, "true", DProperty.BOOLEAN));
+
+        addOrUpdateDetectiveApp(appName, arrayList);
+
+
+        appName = "checkout";
+        arrayList.add(new DProperty(DetectiveKey.APP_NAME, "checkout", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.FORMATTED_NAME, "Checkout", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.DEFAULT_END_POINT, "https://checkout.localzoho.com", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.AUTH_TOKEN, "", DProperty.ENCRYPTEDSTRING));
+        arrayList.add(new DProperty(DetectiveKey.ZIP_NAME, "ZohoCheckout.zip", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.SD_NAME, "BOOKS_CHECKOUT", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.APP_NAME_IN_URL, "checkout", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.LOG_HANDLING, "false", DProperty.BOOLEAN));
+
+        addOrUpdateDetectiveApp(appName, arrayList);
+
+
+        appName = "gsp";
+        arrayList.add(new DProperty(DetectiveKey.APP_NAME, "gsp", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.FORMATTED_NAME, "GSP", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.DEFAULT_END_POINT, "https://tax.localzoho.com", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.AUTH_TOKEN, "", DProperty.ENCRYPTEDSTRING));
+        arrayList.add(new DProperty(DetectiveKey.ZIP_NAME, "ZohoGST.zip", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.SD_NAME, "TAXFILING_APP", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.APP_NAME_IN_URL, "tax", DProperty.STRING));
+        arrayList.add(new DProperty(DetectiveKey.LOG_HANDLING, "false", DProperty.BOOLEAN));
+
+        addOrUpdateDetectiveApp(appName, arrayList);
+
+
+    }
+
+
+    public static void addOrUpdateDetectiveApp(String appName, ArrayList<DProperty> arrayList) {
+        try {
+            SelectQuery selectQuery = new SelectQueryImpl(Table.getTable(APPCONFIG.TABLE));
+            Join AppPropertyJoin = new Join(APPCONFIG.TABLE, PROPERTY.TABLE, new String[]{APPCONFIG.ID}, new String[]{PROPERTY.IDENTIFIERID}, Join.LEFT_JOIN);
+            selectQuery.addJoin(AppPropertyJoin);
+            selectQuery.addSelectColumn(Column.getColumn(APPCONFIG.TABLE, "*"));
+            selectQuery.addSelectColumn(Column.getColumn(PROPERTY.TABLE, "*"));
+            selectQuery.setCriteria(new Criteria(Column.getColumn(APPCONFIG.TABLE, APPCONFIG.SERVERNAME), appName, QueryConstants.EQUAL));
+            DataObject dataObject = OptimusPersistence.get(selectQuery);
+
+            if (dataObject.isEmpty()) {
+
+                Row row = new Row(APPCONFIG.TABLE);
+                row.set(APPCONFIG.SERVERNAME, appName);
+                dataObject.addRow(row);
+
+            }
+
+
+            for (DProperty p : arrayList) {
+                String key = p.getKey();
+                String value = p.getValue();
+                Integer dataType = p.getDatatype();
+
+                Row checkKeyPresence = dataObject.getRow(PROPERTY.TABLE, new Criteria(Column.getColumn(PROPERTY.TABLE, PROPERTY.KEY), key, QueryConstants.EQUAL));
+
+
+                if (checkKeyPresence != null) {
+                    if(dataType == DProperty.ENCRYPTEDSTRING)
+                    {
+                        value=Encryption.getEncryptValue(value,Encryption.ENCRYPTIONKEY);
+                    }
+                    checkKeyPresence.set(PROPERTY.VALUE, value);
+
+                    dataObject.updateRow(checkKeyPresence);
+
+                } else {
+                    if(dataType == DProperty.ENCRYPTEDSTRING)
+                    {
+                        value=Encryption.getEncryptValue(value,Encryption.ENCRYPTIONKEY);
+                    }
+                    Row propertyRow = new Row(PROPERTY.TABLE);
+                    propertyRow.set(PROPERTY.KEY, key);
+                    propertyRow.set(PROPERTY.VALUE, value);
+                    propertyRow.set(PROPERTY.DATATYPE, dataType);
+
+                    dataObject.addRow(propertyRow);
+
+                }
+
+            }
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "APP DProperty Update Failed ", e);
+        }
+    }
+
+
+    public static void loadAppConfigurations() {
+        try {
+            SelectQuery selectQuery = new SelectQueryImpl(Table.getTable(APPCONFIG.TABLE));
+            Join AppPropertyJoin = new Join(APPCONFIG.TABLE, PROPERTY.TABLE, new String[]{APPCONFIG.ID}, new String[]{PROPERTY.IDENTIFIERID}, Join.LEFT_JOIN);
+            selectQuery.addJoin(AppPropertyJoin);
+            selectQuery.addSelectColumn(Column.getColumn(APPCONFIG.TABLE, "*"));
+            selectQuery.addSelectColumn(Column.getColumn(PROPERTY.TABLE, "*"));
+            DataObject dataObject = OptimusPersistence.get(selectQuery);
+            Iterator<Row> appRows = dataObject.getRows(APPCONFIG.TABLE);
+
+            while (appRows.hasNext()) {
+                AppConfig app = new AppConfig();
+
+                Row row = appRows.next();
+
+                app.setAppID((Integer) row.get(APPCONFIG.APPID));
+                app.setServerID((Integer) row.get(APPCONFIG.SERVERID));
+                app.setUriRegex((String) row.get(APPCONFIG.URIREGEX));
+                app.setServerName((String) row.get(APPCONFIG.SERVERNAME));
+                app.setRuleConfig((Integer) row.get(APPCONFIG.RULECONFIG));
+
+                Iterator<Row> propertyRows = dataObject.getRows(PROPERTY.TABLE, new Criteria(Column.getColumn(PROPERTY.TABLE, PROPERTY.IDENTIFIERID), row.get(APPCONFIG.ID), QueryConstants.EQUAL));
+
+                while (propertyRows.hasNext()) {
+                    Row propertyRow = propertyRows.next();
+
+                    if(PROPERTY.DATATYPE.equals(DProperty.ENCRYPTEDSTRING))
+                    {
+                        app.getAppProperties().put((String) propertyRow.get(PROPERTY.KEY), Encryption.getDecryptValue((String) propertyRow.get(PROPERTY.VALUE),Encryption.ENCRYPTIONKEY) );
+                    }
+                    else
+                    {
+                        app.getAppProperties().put((String) propertyRow.get(PROPERTY.KEY), propertyRow.get(PROPERTY.VALUE));
+                    }
+                }
+
+
+                APP_CONFIG_BY_NAME.put((String) app.getAppProperties().getOrDefault(Constants.NAME, Constants.EMPTY), app);
+
+                APP_CONFIG_BY_ID.put(app.getAppID(), app);
+
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "APP Configurations loading Failed ", e);
+        }
+
+    }
+
+}
+
