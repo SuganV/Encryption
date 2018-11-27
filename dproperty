@@ -1,0 +1,88 @@
+package com.zoho.optimus.utils;
+
+import com.zoho.optimus.resources.User;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class DProperty {
+
+    private static String key;
+    private static String value;
+    private static Integer datatype;
+
+
+    public static final int INTEGER = 1;
+    public static final int LONG = 2;
+    public static final int FLOAT = 3;
+    public static final int DOUBLE = 4;
+    public static final int BOOLEAN = 5;
+    public static final int STRING = 6;
+    public static final int ENCRYPTEDSTRING = 7;
+
+
+    private static final Logger LOGGER = Logger.getLogger(User.class.getName());
+
+
+    public DProperty(String key, String value, Integer datatype) {
+        this.key = key;
+        this.value = value;
+        this.datatype = datatype;
+    }
+
+    public DProperty() {
+
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public Integer getDatatype() {
+        return datatype;
+    }
+
+    public void setDatatype(Integer datatype) {
+        this.datatype = datatype;
+    }
+
+
+    public static Object returnDataType(String value , Integer dataType)
+    {
+        try {
+            if (dataType.equals(INTEGER)) {
+                return Integer.parseInt(value);
+            } else if (dataType.equals(LONG)) {
+                return Long.parseLong(value);
+            } else if (dataType.equals(FLOAT)) {
+                return Float.parseFloat(value);
+            } else if (dataType.equals(DOUBLE)) {
+                return Double.parseDouble(value);
+            } else if (dataType.equals(BOOLEAN)) {
+                return Boolean.parseBoolean(value);
+            } else if (dataType.equals(STRING)) {
+                return value;
+            }else if (dataType.equals(ENCRYPTEDSTRING)) {
+                return value;
+            }
+        }
+        catch(Exception e)
+        {
+            LOGGER.log(Level.SEVERE, "DProperty Value cannot be NULL ",e);
+        }
+        return null ;
+    }
+
+}
