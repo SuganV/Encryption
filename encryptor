@@ -1,0 +1,167 @@
+package com.zoho.optimus.utils;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+
+
+public class Encryption {
+
+    private static final Logger LOGGER = Logger.getLogger(Encryption.class.getName());
+
+
+    private static SecretKeySpec skeySpec;
+    private static Cipher cipher;
+    private static final char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
+
+    public static final String ENCRYPTIONKEY = "Detective0SecretKeyfor0AuthToken";
+
+    public static String getEncryptValue(String plainText, String encryptionKey) {
+        try {
+
+            if (plainText != null && !plainText.equals("")) {
+
+                skeySpec = new SecretKeySpec(HexfromString(encryptionKey), "AES");
+                cipher = Cipher.getInstance("AES");
+                cipher.init(1, skeySpec);
+                byte encryptedBytes[] = cipher.doFinal(plainText.getBytes());
+                return HextoString(encryptedBytes);
+
+            } else {
+
+                return "";
+
+            }
+        } catch (Exception e) {
+
+            LOGGER.log(Level.SEVERE, "Error in Encryption ", e);
+
+        }
+
+        return null;
+    }
+
+    public static String getDecryptValue(String cipherText, String encryptionKey) {
+
+        try {
+
+            if (cipherText != null && !cipherText.equals("")) {
+
+                skeySpec = new SecretKeySpec(HexfromString(encryptionKey), "AES");
+                cipher = Cipher.getInstance("AES");
+                cipher.init(2, skeySpec);
+                byte decryptedBytes[] = cipher.doFinal(HexfromString(cipherText));
+                return new String(decryptedBytes);
+
+            } else {
+
+                return "";
+
+            }
+        } catch (Exception e) {
+
+            LOGGER.log(Level.SEVERE, "Error in Decryption ", e);
+
+        }
+        return null;
+    }
+
+
+    public static String HextoString(byte byte0[]) {
+
+        int k = 0, i = 0, j = byte0.length;
+
+        char encryptedString[] = new char[j * 2];
+
+        for (int l = i; l < i + j; l++) {
+            byte byte1 = byte0[l];
+            encryptedString[k++] = hexDigits[byte1 >>> 4 & 0xf];
+            encryptedString[k++] = hexDigits[byte1 & 0xf];
+        }
+        return new String(encryptedString);
+    }
+
+
+    public static byte[] HexfromString(String hexFromString) {
+        int i = hexFromString.length();
+        byte createBytes[] = new byte[(i + 1) / 2];
+        int j = 0;
+        int k = 0;
+        if (i % 2 == 1)
+            createBytes[k++] = (byte) HexfromCharacter(hexFromString.charAt(j++));
+        while (j < i)
+            createBytes[k++] = (byte) (HexfromCharacter(hexFromString.charAt(j++)) << 4 | HexfromCharacter(hexFromString.charAt(j++)));
+        return createBytes;
+    }
+
+    public static int HexfromCharacter(char hexFromCharacter) {
+        if (hexFromCharacter >= '0' && hexFromCharacter <= '9')
+            return hexFromCharacter - 48;
+        if (hexFromCharacter >= 'A' && hexFromCharacter <= 'Z')
+            return (hexFromCharacter - 65) + 10;
+        if (hexFromCharacter >= 'a' && hexFromCharacter <= 'z')
+            return (hexFromCharacter - 97) + 10;
+        else
+            throw new IllegalArgumentException("invalid hex digit: " + hexFromCharacter);
+    }
+
+
+}
+
+/*public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter String : ");
+        String plainString = sc.nextLine();
+
+
+        try {
+            String encyptStr = getEncryptValue(plainString, ENCRYPTIONKEY);
+
+            System.out.println("Plain   String  : " + plainString);
+            System.out.println("Encrypt String  : " + encyptStr);
+
+            sc = new Scanner(System.in);
+            System.out.println("Enter Decrypt String : ");
+            String decString = sc.nextLine();
+            String decryptStr = getDecryptValue(decString, ENCRYPTIONKEY);
+
+            System.out.println("Decrypt String  : " + decryptStr);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Plain Text cannot be NULL ", e);
+        }
+    }*/
+
+
+/*
+
+
+catch (NoSuchAlgorithmException e)
+        {
+            LOGGER.log(Level.SEVERE, "No Such Algorithm Exception ", e);
+        }
+        catch (IllegalBlockSizeException e)
+        {
+            LOGGER.log(Level.SEVERE, "Illegal BlockSize Exception ", e);
+        }
+ */
+
+
+/*
+    public static String HextoString(byte abyte0[]) {
+        return HextoString(abyte0, 0, abyte0.length);
+    }
+
+    public static String HextoString(byte abyte0[], int i, int j) {
+        char ac[] = new char[j * 2];
+        int k = 0;
+        for (int l = i; l < i + j; l++) {
+            byte byte0 = abyte0[l];
+            ac[k++] = hexDigits[byte0 >>> 4 & 0xf];
+            ac[k++] = hexDigits[byte0 & 0xf];
+        }
+        return new String(ac);
+    }
+    */
